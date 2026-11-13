@@ -1,0 +1,22 @@
+# Hexloo roadmap
+- [x] Import uploaded code into this project
+- [x] Fix hidden background leaves / broken settings sound toggle
+- [x] Rename to "Hexloo" by Vidia Studios (logo, titles, manifest)
+- [x] Profile: 8 SVG avatars + Upload Photo (saved locally)
+- [x] Settings: Music / Sound Effects / Background Blur toggles + ambient music loop
+- [x] Richer 3D tiles + board with textures
+- [x] Golden "AD FOR 3x Coin" button every 30 min playtime, 60s window, 10-min 3x boost
+- [x] Ranks: 100 rows, pinned Your Rank, monthly prizes kept
+- [x] Shop: illustrated backgrounds, note banner, Custom items with EDIT editors
+- [x] Coins tab: 3 bundles with test-grant popup
+- [x] Home: Spin Wheel + Collector Book (monthly limited sets)
+- [x] Tests for prices, boosts, spin odds, leaderboard size
+- [x] Hard Mode: red button under PLAY, spawning stacks, Board Full game-over card
+- [x] Ranks: 4th "Hard Mode" tab (top levels 1–100, pinned best, monthly prizes)
+- [x] Haptics on pick up / snap / 10-pop + Vibration toggle in Settings (default ON)
+- [x] Cosy branded 2-second loading screen on first open
+- [x] 2x/3x coin ad buttons in Hard Mode (done earlier)
+- [x] Bigger scale on iPad/laptop (done earlier)
+- [x] Hard Mode 5 power-ups: Shuffle, Zap, Freeze, One-Colour, Mega Bomb
+- [x] Sharp high-res backgrounds when Blur is OFF (all scenes + Sage Leaves)
+- [x] Bolder Galaxy and Swirly Lolly board bases

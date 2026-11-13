@@ -28,3 +28,15 @@ use the editor.
   own key and store it in Secrets.
 - **Secrets.** Lovable manages them. Do not put secret values in the repo.
 <!-- LOVABLE:END -->
+
+## Project rules (Hexloo game)
+
+- Game rules, prices, odds and timers live as pure functions/data in `src/game/*` and are covered by `src/game/__tests__`; UI only calls them. Why: rules stay testable without React.
+- All player progress is saved in browser localStorage through `src/game/store.ts` (one key, migrated on load); uploaded pictures use separate keys via `src/game/images.ts`. Why: the game must work fully offline with no backend.
+- Background pictures are bundled 1920px square `.webp` files (plus 288x504 `-thumb` shop pictures) in `src/assets/bg/` resolved by `src/game/backgrounds.ts`, and the PWA precaches them. Why: offline play needs every scene cached, and square hi-res art stays sharp unblurred on phones, iPads and laptops alike.
+- Each game `<svg>` gets its own gradient/texture ids via `TileDefs`/`useSvgPrefix` (`hexgeo.tsx`); never use fixed SVG ids. Why: many previews render on one page.
+- The offline service worker registers only from `src/lib/pwa.ts`. Why: it must never run in previews or iframes.
+- Hard Mode runs on its own `/hard` route with its own saved run (`hardRun`), separate from the normal `board`. Why: normal endless play must never be affected by Hard Mode rules.
+- Device vibration only goes through `src/game/haptics.ts`, which checks the player's Vibration setting. Why: one switch must silence every vibration.
+- The 2x/3x coin ad buttons, reward videos and play-time clock live in `src/components/game/CoinAds.tsx` and are used by every game mode. Why: Play and Hard Mode must behave identically for boosts.
+- Bigger screens scale through the root font size (md+ in `src/styles.css`), so UI sizes use rem, not px; the board fits its space by height on md+. Why: phones keep their exact sizing while iPads/laptops grow.
