@@ -8,6 +8,13 @@ export const HARD_POPS_PER_LEVEL = 2;
 export const SPAWN_MIN_TILES = 2;
 export const SPAWN_MAX_TILES = 4;
 export const PALETTE_SIZE = 6;
+/** Extra coins for every Hard Mode level gained, on top of pop and board-clear rewards. */
+export const HARD_LEVEL_BONUS = 50;
+
+/** The level-up bonus with any active 2x/3x coin boost applied. */
+export function hardLevelBonus(multiplier: number): number {
+  return HARD_LEVEL_BONUS * multiplier;
+}
 
 export type HardRun = {
   board: Board;

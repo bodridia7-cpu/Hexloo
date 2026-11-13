@@ -23,10 +23,11 @@ import {
   popStack,
   reshuffle,
   stackAt,
+  suggestMove,
   topGroup,
 } from "@/game/engine";
 import { coinMultiplier } from "@/game/boosts";
-import { baseFor, getPlayer, hexaFor, updatePlayer, usePlayer } from "@/game/store";
+import { baseFor, finishTutorial, getPlayer, hexaFor, needsTutorial, updatePlayer, usePlayer } from "@/game/store";
 
 export const Route = createFileRoute("/play")({
   ssr: false,
@@ -148,6 +149,7 @@ function Play() {
     const nb = moveGroup(b, from, to);
     if (nb === b) return;
     updatePlayer((s) => ({ ...s, board: nb }));
+    finishTutorial();
     setLastDrop({ cell: to, from: start, stamp: Date.now() });
     sfx.drop(g.count, stackAt(nb, to).length);
     haptic.snap();
@@ -156,6 +158,8 @@ function Play() {
 
   const board = player.board;
   const stuck = !!board && !busy && !isCleared(board) && !hasMoves(board);
+  const tutorial = needsTutorial(player) && !!board && !busy;
+  const hint = tutorial ? suggestMove(board) : null;
 
   return (
     <Screen>
@@ -191,7 +195,15 @@ function Play() {
               pops={pops}
               lastDrop={lastDrop}
               onMove={handleMove}
+              hint={hint}
             />
+          </div>
+        )}
+        {tutorial && (
+          <div className="pointer-events-none absolute inset-x-0 -top-2 flex justify-center px-2 animate-in fade-in slide-in-from-top-2 duration-500">
+            <p role="status" className="tutorial-tip max-w-xs px-4 py-2 text-center font-display text-sm font-semibold leading-snug">
+              Drag the top matching colours onto a matching stack or empty space — reach 10 to pop!
+            </p>
           </div>
         )}
         {stuck && (

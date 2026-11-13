@@ -45,6 +45,7 @@ export type PlayerData = {
   vibration: boolean;
   hardBest: number; // best Hard Mode level reached
   hardRun: HardRun | null; // Hard Mode game in progress
+  tutorialDone: boolean; // first-game "how to play" hint has been shown and finished
   customHexa: CustomHexa;
   customBase: CustomBase;
   board: Board | null;
@@ -72,6 +73,7 @@ export const DEFAULT_PLAYER: PlayerData = {
   vibration: true,
   hardBest: 0,
   hardRun: null,
+  tutorialDone: false,
   customHexa: { finish: "matte", colors: DEFAULT_CUSTOM_COLORS },
   customBase: DEFAULT_CUSTOM_BASE,
   board: null,
@@ -84,6 +86,20 @@ const listeners = new Set<() => void>();
 
 // Items renamed in the Hexloo update.
 const RENAMED: Record<string, string> = { "background:peach": "background:beach", "background:mint": "background:clouds" };
+
+/** Saves from before the tutorial existed: anyone who has already played skips it. */
+export function hasPlayedBefore(p: Partial<PlayerData>): boolean {
+  return (p.timePlayed ?? 0) > 0 || (p.level ?? 1) > 1 || (p.highestLevel ?? 1) > 1 || !!p.board;
+}
+
+/** The first-game hint shows only until the player's first move. */
+export function needsTutorial(p: Pick<PlayerData, "tutorialDone">): boolean {
+  return !p.tutorialDone;
+}
+
+export function finishTutorial() {
+  updatePlayer((s) => (s.tutorialDone ? s : { ...s, tutorialDone: true }));
+}
 
 export function migrate(parsed: Partial<PlayerData> & { sound?: boolean }): PlayerData {
   const unlocked = Array.from(new Set((parsed.unlocked ?? DEFAULT_PLAYER.unlocked).map((k) => RENAMED[k] ?? k)));
@@ -101,6 +117,7 @@ export function migrate(parsed: Partial<PlayerData> & { sound?: boolean }): Play
     ...DEFAULT_PLAYER,
     ...rest,
     sfx: parsed.sfx ?? sound ?? true,
+    tutorialDone: parsed.tutorialDone ?? hasPlayedBefore(parsed),
     avatar,
     unlocked,
     equipped,

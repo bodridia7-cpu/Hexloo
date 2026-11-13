@@ -103,6 +103,34 @@ export function hasMoves(board: Board): boolean {
   return false;
 }
 
+/**
+ * A good first move for the tutorial hint: onto a matching stack (biggest resulting group)
+ * when possible, otherwise onto an empty slot. Null when nothing can move.
+ */
+export function suggestMove(board: Board): { from: number; to: number } | null {
+  let best: { from: number; to: number; score: number } | null = null;
+  let empty: { from: number; to: number } | null = null;
+  const n = board.stacks.length;
+  for (let a = 0; a < n; a++) {
+    const g = topGroup(stackAt(board, a));
+    if (!g) continue;
+    for (let b = 0; b < n; b++) {
+      if (!canDrop(board, a, b)) continue;
+      const dst = topGroup(stackAt(board, b));
+      if (!dst) {
+        if (!empty && stackAt(board, a).length > g.count) empty = { from: a, to: b };
+        continue;
+      }
+      const score = g.count + dst.count;
+      if (!best || score > best.score) best = { from: a, to: b, score };
+    }
+  }
+  if (best) return { from: best.from, to: best.to };
+  if (empty) return empty;
+  for (let a = 0; a < n; a++) for (let b = 0; b < n; b++) if (canDrop(board, a, b)) return { from: a, to: b };
+  return null;
+}
+
 export function colourCountForLevel(level: number): number {
   return Math.min(3 + Math.floor((level - 1) / 2), 6);
 }

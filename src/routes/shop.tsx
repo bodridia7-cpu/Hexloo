@@ -1,11 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Coins, Gift, PlayCircle } from "lucide-react";
+import { Coins, Eye, Gift, PlayCircle } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
 import { gameButton, GameButton } from "@/components/game/GameButton";
 import { CustomBaseEditor, CustomHexaEditor, CustomImageEditor } from "@/components/game/CustomEditors";
 import { GameModal } from "@/components/game/GameModal";
+import { BackgroundPreview } from "@/components/game/BackgroundPreview";
 import { BackToMenu, CoinPill, PageTitle } from "@/components/game/Hud";
 import { ItemArt } from "@/components/game/ItemArt";
 import { RewardAd } from "@/components/game/RewardAd";
@@ -111,6 +112,7 @@ function Editor({ category, open, onOpenChange }: { category: Category; open: bo
 function ItemList({ category }: { category: Category }) {
   const player = usePlayer();
   const [editing, setEditing] = useState(false);
+  const [previewing, setPreviewing] = useState<{ id: string; name: string } | null>(null);
   const items =
     category === "background" ? BACKGROUNDS : category === "hexa" ? HEXAS : BASES;
   return (
@@ -131,9 +133,24 @@ function ItemList({ category }: { category: Category }) {
             <ItemArt category={category} id={item.id} />
             <div className="min-w-0 flex-1">
               <p className="truncate font-display text-lg font-semibold leading-tight">{item.name}</p>
-              <p className="font-display text-2xl font-bold text-foreground/90">
-                {item.price === 0 ? "Free" : formatCash(item.price)}
-              </p>
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                <p className="font-display text-2xl font-bold text-foreground/90">
+                  {item.price === 0 ? "Free" : formatCash(item.price)}
+                </p>
+                {category === "background" && !custom && !owned && (
+                  <button
+                    onClick={() => {
+                      sfx.tap();
+                      setPreviewing({ id: item.id, name: item.name });
+                    }}
+                    aria-label={`Preview ${item.name}`}
+                    className="pill-3d inline-flex h-7 items-center gap-1 rounded-full px-2.5 font-display text-[0.68rem] font-semibold uppercase tracking-wide transition-transform active:scale-90"
+                  >
+                    <Eye className="size-3.5" strokeWidth={2.8} />
+                    Preview
+                  </button>
+                )}
+              </div>
             </div>
             <div className="flex shrink-0 items-center gap-1.5">
               {custom && owned && (
@@ -187,6 +204,7 @@ function ItemList({ category }: { category: Category }) {
         );
       })}
       <Editor category={category} open={editing} onOpenChange={setEditing} />
+      {previewing && <BackgroundPreview bg={previewing.id} name={previewing.name} onClose={() => setPreviewing(null)} />}
     </ul>
   );
 }

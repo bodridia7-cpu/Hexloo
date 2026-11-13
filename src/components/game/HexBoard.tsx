@@ -55,6 +55,7 @@ export function HexBoard({
   aim,
   onAim,
   blasts,
+  hint,
 }: {
   board: Board;
   hexa: HexaItem;
@@ -68,6 +69,8 @@ export function HexBoard({
   aim?: Aim | null;
   onAim?: (cell: number) => void;
   blasts?: BlastFx[];
+  /** Tutorial: an animated hand dragging from one stack to another. */
+  hint?: { from: number; to: number } | null;
 }) {
   const svgRef = useRef<SVGSVGElement>(null);
   const [drag, setDrag] = useState<Drag | null>(null);
@@ -405,6 +408,31 @@ export function HexBoard({
           })}
         </g>
       ))}
+
+      {/* Tutorial hand: picks up the top colour and slides it to the suggested slot */}
+      {hint && !drag && (() => {
+        const a = ctr(hint.from);
+        const b = ctr(hint.to);
+        const ay = a.y - stackAt(board, hint.from).length * TILE_H - 4;
+        const by = b.y - stackAt(board, hint.to).length * TILE_H - 4;
+        return (
+          <g key={`hint${hint.from}-${hint.to}`} pointerEvents="none">
+            <polygon className="stack-hint" points={pts(flatHex(b.x, b.y, S * 0.86))} fill="var(--gold)" fillOpacity={0.4} stroke="var(--gold-deep)" strokeWidth={2} />
+            <g transform={`translate(${a.x} ${ay})`}>
+              <g className="tutorial-hand" style={{ "--hx": `${b.x - a.x}px`, "--hy": `${by - ay}px` } as React.CSSProperties}>
+                <path
+                  d="M -3 2 Q -3 -2 0 -2 Q 3 -2 3 2 L 3 10 Q 7 9 9 11 Q 12 11 13 14 L 13 22 Q 13 28 7 28 L -1 28 Q -5 28 -7 24 L -11 16 Q -12 13 -9 12.5 Q -7 12.5 -3 16 Z"
+                  transform="scale(1.25)"
+                  fill="var(--cream)"
+                  stroke="var(--foreground)"
+                  strokeWidth={1.8}
+                  strokeLinejoin="round"
+                />
+              </g>
+            </g>
+          </g>
+        );
+      })()}
 
       {/* Dragged group follows the finger */}
       {drag && drag.moved && (

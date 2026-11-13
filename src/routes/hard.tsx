@@ -15,7 +15,7 @@ import { sfx } from "@/game/audio";
 import { coinMultiplier } from "@/game/boosts";
 import { canPop, CELLS, clearBonus, isCleared, moveGroup, mulberry32, popReward, popStack, stackAt, topGroup } from "@/game/engine";
 import { haptic } from "@/game/haptics";
-import { dealHardBoard, hardLevelForPops, isGameOver, movesUntilSpawn, newHardRun, spawnTurn, type HardRun } from "@/game/hard";
+import { dealHardBoard, HARD_LEVEL_BONUS, hardLevelBonus, hardLevelForPops, isGameOver, movesUntilSpawn, newHardRun, spawnTurn, type HardRun } from "@/game/hard";
 import { applyPower, blastCells, canAfford, freezeRun, frozenMovesLeft, FREEZE_MOVES, powerById, powerTargets, type PowerId } from "@/game/powers";
 import { formatCash } from "@/game/ranks";
 import { baseFor, getPlayer, hexaFor, updatePlayer, usePlayer } from "@/game/store";
@@ -55,7 +55,7 @@ function Hard() {
   const [spawns, setSpawns] = useState<DropFx[]>([]);
   const [incoming, setIncoming] = useState(0);
   const [busy, setBusy] = useState(false);
-  const [banner, setBanner] = useState<number | null>(null);
+  const [banner, setBanner] = useState<{ level: number; bonus: number; mult: number } | null>(null);
   const [over, setOver] = useState<{ level: number; coins: number; best: boolean } | null>(null);
   const [settingsOpen, setSettingsOpen] = useState(false);
   const [round, setRound] = useState(0);
@@ -126,17 +126,20 @@ function Hard() {
       if (!r || !canPop(stackAt(r.board, cell))) return settle();
       const color = topGroup(stackAt(r.board, cell))!.color;
       let board = popStack(r.board, cell);
-      const amount = popReward(coinMultiplier(p, Date.now()));
+      const mult = coinMultiplier(p, Date.now());
+      const amount = popReward(mult);
       const popCount = r.pops + 1;
       const level = hardLevelForPops(popCount);
       const cleared = isCleared(board);
-      const bonus = cleared ? clearBonus(coinMultiplier(p, Date.now())) : 0;
+      const bonus = cleared ? clearBonus(mult) : 0;
+      const levelBonus = level > r.level ? hardLevelBonus(mult) * (level - r.level) : 0;
+      const earned = amount + bonus + levelBonus;
       if (cleared) board = dealHardBoard(r.colors, mulberry32(seed()));
       updatePlayer((s) => ({
         ...s,
-        coins: s.coins + amount + bonus,
+        coins: s.coins + earned,
         hardBest: Math.max(s.hardBest, level),
-        hardRun: { ...r, board, pops: popCount, level, coins: r.coins + amount + bonus },
+        hardRun: { ...r, board, pops: popCount, level, coins: r.coins + earned },
       }));
       const id = ++fxId.current;
       setPops((list) => [...list, { id, cell, base: stackAt(board, cell).length, color, amount }]);
@@ -145,10 +148,11 @@ function Hard() {
       haptic.pop();
       if (level > r.level) {
         later(() => {
-          setBanner(level);
+          setBanner({ level, bonus: levelBonus, mult });
           sfx.levelUp();
+          sfx.coin();
         }, 350);
-        later(() => setBanner(null), 2000);
+        later(() => setBanner(null), 2600);
       }
       if (!cleared && canPop(stackAt(board, cell))) schedulePop(cell, 480);
       else settle();
@@ -364,8 +368,16 @@ function Hard() {
         {banner && (
           <div className="pointer-events-none absolute inset-0 flex items-center justify-center">
             <div className="banner-in card-3d flex flex-col items-center px-8 py-5 text-center">
-              <p className="title-gold text-5xl">Level {banner}!</p>
-              <p className="mt-1 font-display text-lg font-semibold">Hard Mode</p>
+              <span className="text-2xl" aria-hidden>
+                🔥✨🔥
+              </span>
+              <p className="title-gold text-5xl">Level {banner.level}!</p>
+              <p className="mt-1 font-display text-xl font-semibold">+{HARD_LEVEL_BONUS} Hard Mode Bonus!</p>
+              {banner.mult > 1 && (
+                <p className="mt-1 rounded-full bg-gold-light px-3 font-display text-sm font-bold text-gold-deep">
+                  {banner.mult}x boost · +${banner.bonus} coins
+                </p>
+              )}
             </div>
           </div>
         )}
