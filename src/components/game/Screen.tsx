@@ -112,12 +112,13 @@ export function SageScene() {
 }
 
 /** Full-screen background: the equipped picture (or the player's own), softly blurred when Blur is on. */
-export function Scene({ bg }: { bg: string }) {
-  const { blur } = usePlayer();
+export function Scene({ bg, blur: blurOverride, className }: { bg: string; blur?: boolean; className?: string }) {
+  const player = usePlayer();
+  const blur = blurOverride ?? player.blur;
   const custom = useImage("background");
   const src = bg === CUSTOM_ID ? custom : bgImage(bg);
   return (
-    <div data-bg={bg} className="scene pointer-events-none fixed inset-0 -z-10 overflow-hidden">
+    <div data-bg={bg} className={cn("scene pointer-events-none fixed inset-0 -z-10 overflow-hidden", className)}>
       <div className={cn("scene-art absolute inset-0", blur && "scene-art-blur")}>
         {src ? (
           <img src={src} alt="" decoding="async" draggable={false} className="absolute inset-0 size-full object-cover object-center" />
