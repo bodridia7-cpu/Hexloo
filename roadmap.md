@@ -24,4 +24,4 @@
 - [x] Shop Backgrounds: PREVIEW button (eye) on unowned items, full-screen with Back to Shop pill + blur toggle
 - [x] Hard Mode: +50 bonus coins per level up (multiplied by 2x/3x) with popup
 - [x] First-game tutorial (hand pointer + tip banner, hides on first move) + How to Play 3-slide guide in Settings
-- [ ] Add sitemap.xml and robots.txt
+- [x] Add sitemap.xml and robots.txt
