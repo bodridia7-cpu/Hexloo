@@ -79,7 +79,7 @@ const SLIDES = [
     art: (
       <div className="relative">
         <MiniStacks stacks={[Array.from({ length: POP_SIZE }, () => 1)]} />
-        <span className="banner-in absolute right-[18%] top-2 rounded-full bg-gold px-3 py-1 font-display text-sm font-bold">POP! +${POP_REWARD}</span>
+        <span className="banner-in absolute left-[calc(50%+1.5rem)] top-4 whitespace-nowrap rounded-full bg-gold px-3 py-1 font-display text-sm font-bold shadow-[0_3px_0_var(--gold-deep)]">POP! +${POP_REWARD}</span>
       </div>
     ),
     text: `Build a tower of ${POP_SIZE} of one colour and it pops for coins. Clear the whole board to level up and earn a +$${CLEAR_BONUS} bonus.`,

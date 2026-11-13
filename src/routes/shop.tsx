@@ -133,9 +133,24 @@ function ItemList({ category }: { category: Category }) {
             <ItemArt category={category} id={item.id} />
             <div className="min-w-0 flex-1">
               <p className="truncate font-display text-lg font-semibold leading-tight">{item.name}</p>
-              <p className="font-display text-2xl font-bold text-foreground/90">
-                {item.price === 0 ? "Free" : formatCash(item.price)}
-              </p>
+              <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
+                <p className="font-display text-2xl font-bold text-foreground/90">
+                  {item.price === 0 ? "Free" : formatCash(item.price)}
+                </p>
+                {category === "background" && !custom && !owned && (
+                  <button
+                    onClick={() => {
+                      sfx.tap();
+                      setPreviewing({ id: item.id, name: item.name });
+                    }}
+                    aria-label={`Preview ${item.name}`}
+                    className="pill-3d inline-flex h-7 items-center gap-1 rounded-full px-2.5 font-display text-[0.68rem] font-semibold uppercase tracking-wide transition-transform active:scale-90"
+                  >
+                    <Eye className="size-3.5" strokeWidth={2.8} />
+                    Preview
+                  </button>
+                )}
+              </div>
             </div>
             <div className="flex shrink-0 items-center gap-1.5">
               {custom && owned && (
@@ -167,20 +182,6 @@ function ItemList({ category }: { category: Category }) {
                   Equip
                 </GameButton>
               ) : (
-                <>
-                {category === "background" && !custom && (
-                  <button
-                    onClick={() => {
-                      sfx.tap();
-                      setPreviewing({ id: item.id, name: item.name });
-                    }}
-                    aria-label={`Preview ${item.name}`}
-                    className="pill-3d inline-flex h-9 items-center gap-1 rounded-full px-2.5 font-display text-[0.7rem] font-semibold uppercase tracking-wide transition-transform active:scale-90"
-                  >
-                    <Eye className="size-4" strokeWidth={2.6} />
-                    Preview
-                  </button>
-                )}
                 <GameButton
                   tone="gold"
                   size="sm"
@@ -197,7 +198,6 @@ function ItemList({ category }: { category: Category }) {
                 >
                   Buy
                 </GameButton>
-                </>
               )}
             </div>
           </li>
