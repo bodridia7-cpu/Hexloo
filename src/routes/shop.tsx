@@ -1,11 +1,12 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Coins, Gift, PlayCircle } from "lucide-react";
+import { Coins, Eye, Gift, PlayCircle } from "lucide-react";
 import { useState } from "react";
 import { toast } from "sonner";
 
 import { gameButton, GameButton } from "@/components/game/GameButton";
 import { CustomBaseEditor, CustomHexaEditor, CustomImageEditor } from "@/components/game/CustomEditors";
 import { GameModal } from "@/components/game/GameModal";
+import { BackgroundPreview } from "@/components/game/BackgroundPreview";
 import { BackToMenu, CoinPill, PageTitle } from "@/components/game/Hud";
 import { ItemArt } from "@/components/game/ItemArt";
 import { RewardAd } from "@/components/game/RewardAd";
@@ -111,6 +112,7 @@ function Editor({ category, open, onOpenChange }: { category: Category; open: bo
 function ItemList({ category }: { category: Category }) {
   const player = usePlayer();
   const [editing, setEditing] = useState(false);
+  const [previewing, setPreviewing] = useState<{ id: string; name: string } | null>(null);
   const items =
     category === "background" ? BACKGROUNDS : category === "hexa" ? HEXAS : BASES;
   return (
@@ -165,6 +167,20 @@ function ItemList({ category }: { category: Category }) {
                   Equip
                 </GameButton>
               ) : (
+                <>
+                {category === "background" && !custom && (
+                  <button
+                    onClick={() => {
+                      sfx.tap();
+                      setPreviewing({ id: item.id, name: item.name });
+                    }}
+                    aria-label={`Preview ${item.name}`}
+                    className="pill-3d inline-flex h-9 items-center gap-1 rounded-full px-2.5 font-display text-[0.7rem] font-semibold uppercase tracking-wide transition-transform active:scale-90"
+                  >
+                    <Eye className="size-4" strokeWidth={2.6} />
+                    Preview
+                  </button>
+                )}
                 <GameButton
                   tone="gold"
                   size="sm"
@@ -181,12 +197,14 @@ function ItemList({ category }: { category: Category }) {
                 >
                   Buy
                 </GameButton>
+                </>
               )}
             </div>
           </li>
         );
       })}
       <Editor category={category} open={editing} onOpenChange={setEditing} />
+      {previewing && <BackgroundPreview bg={previewing.id} name={previewing.name} onClose={() => setPreviewing(null)} />}
     </ul>
   );
 }
