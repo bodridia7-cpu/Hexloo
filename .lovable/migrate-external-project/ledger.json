@@ -1,0 +1,10 @@
+[
+  {"capability":"code","source":"uploaded ZIP hexloo-vidiastudios-main (same Lovable TanStack Start template revision)","outcome":"migrate","status":"in-progress","next_action":"copy source, merge dependencies, verify build"},
+  {"capability":"schema/records","source":"none; player progress lives in browser localStorage (src/game/store.ts)","outcome":"not applicable","status":"verified-absent","next_action":"none"},
+  {"capability":"auth identities/authorization","source":"none; no sign-in in source","outcome":"not applicable","status":"verified-absent","next_action":"none"},
+  {"capability":"uploaded file bytes","source":"player photo uploads saved in browser localStorage (src/game/images.ts); bundled background art in src/assets/bg","outcome":"migrate bundled art","status":"in-progress","next_action":"copy assets"},
+  {"capability":"offline PWA (vite-plugin-pwa + public/manifest)","source":"vite.config.ts, src/lib/pwa.ts","outcome":"preserve","status":"in-progress","next_action":"install plugin, verify after publish"},
+  {"capability":"external providers/secrets/webhooks/schedules/public endpoints","source":"none detected (only Google Fonts links)","outcome":"not applicable","status":"verified-absent","next_action":"none"},
+  {"capability":"cutover","source":"n/a","outcome":"publish from Lovable","status":"pending","next_action":"user publishes when ready"},
+  {"capability":"verification","source":"tests + preview checks","outcome":"verify","status":"pending","next_action":"run tests and load routes"}
+]
