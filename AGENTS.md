@@ -40,3 +40,4 @@ use the editor.
 - Device vibration only goes through `src/game/haptics.ts`, which checks the player's Vibration setting. Why: one switch must silence every vibration.
 - The 2x/3x coin ad buttons, reward videos and play-time clock live in `src/components/game/CoinAds.tsx` and are used by every game mode. Why: Play and Hard Mode must behave identically for boosts.
 - Bigger screens scale through the root font size (md+ in `src/styles.css`), so UI sizes use rem, not px; the board fits its space by height on md+. Why: phones keep their exact sizing while iPads/laptops grow.
+- The first-game hint is driven by `tutorialDone` in the player save (old saves with progress skip it) and the board's `hint` prop; Play marks it done on the first move. Why: it must show once, never block play, and never reappear.

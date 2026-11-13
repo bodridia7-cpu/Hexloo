@@ -20,8 +20,7 @@
 - [x] Hard Mode 5 power-ups: Shuffle, Zap, Freeze, One-Colour, Mega Bomb
 - [x] Sharp high-res backgrounds when Blur is OFF (all scenes + Sage Leaves)
 - [x] Bolder Galaxy and Swirly Lolly board bases
-- [ ] Sharper backgrounds with Blur OFF (crisp rendering on iPad/laptop)
-- [ ] Galaxy + Swirly Lolly bases clearly visible on board
-- [ ] Shop Backgrounds: PREVIEW button (eye) on unowned items, full-screen with Back to Shop pill + blur toggle
-- [ ] Hard Mode: +50 bonus coins per level up (multiplied by 2x/3x) with popup
-- [ ] First-game tutorial (hand pointer + tip banner, hides on first move) + How to Play 3-slide guide in Settings
+- [ ] Sharper backgrounds with Blur OFF / bolder Galaxy + Swirly Lolly (done in an earlier update; waiting on user to say if still needed)
+- [x] Shop Backgrounds: PREVIEW button (eye) on unowned items, full-screen with Back to Shop pill + blur toggle
+- [x] Hard Mode: +50 bonus coins per level up (multiplied by 2x/3x) with popup
+- [x] First-game tutorial (hand pointer + tip banner, hides on first move) + How to Play 3-slide guide in Settings
